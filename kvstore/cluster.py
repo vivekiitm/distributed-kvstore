@@ -12,6 +12,7 @@ Provides a high-level interface for:
 import random
 from typing import List, Optional, Dict, Any, Set, Tuple
 from .node import KVNode, VersionedValue
+from kvstore.hash_ring import HashRing
 
 
 class Cluster:
@@ -35,6 +36,10 @@ class Cluster:
         self.conflict_strategy = conflict_strategy
         self.replication_factor = replication_factor
         self._partitions: Set[Tuple[str, str]] = set()  # pairs that can't communicate
+        self.hash_ring = HashRing(self.nodes)
+
+    def get_node_for_key(self, key):
+        return self.hash_ring.get_node(key)    
 
     def add_node(self, node_id: str) -> KVNode:
         """Create and register a new node in the cluster."""

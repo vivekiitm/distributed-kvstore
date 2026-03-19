@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from collections import defaultdict
 from .vector_clock import VectorClock, ClockComparison
 from .replication import ReplicationLog, WriteOperation
-
+from kvstore.storage import WALStorage
 
 @dataclass
 class VersionedValue:
@@ -77,6 +77,8 @@ class KVNode:
         conflict_strategy: str = "lww",
         replication_factor: int = 2,
     ):
+        self.storage = WALStorage(node_id)
+        self.kv = self.storage.load()
         self.node_id = node_id
         self.peers: List["KVNode"] = peers or []
         self.conflict_strategy = conflict_strategy
@@ -122,6 +124,8 @@ class KVNode:
             self.replication_log.append(op)
 
         # Replicate asynchronously to peers
+        self.storage = WALStorage(node_id)
+        self.kv = self.storage.load()
         self._replicate_to_peers(key, versioned)
         return versioned
 
