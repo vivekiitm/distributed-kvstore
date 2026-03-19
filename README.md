@@ -116,7 +116,7 @@ distributed-kvstore/
 └── README.md
 ```
 
-## References
+## References/Papers
 
 - [Amazon Dynamo Paper (2007)](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf)
 - [Lamport Clocks (1978)](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
